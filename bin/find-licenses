@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+var Observable = require('rx').Observable;
+
+var findLicenses = require('../');
+
+var target = process.argv[2] || '.';
+
+if (process.argv.indexOf('-h') !== -1 || process.argv.indexOf('--help') !== -1) {
+  console.log();
+
+  console.log('usage: find-licences [path-to-project] [options]');
+
+  console.log();
+
+  console.log('\t', '-C, --CSV \t', 'Output as Comma Separated Values');
+  console.log('\t', '-h, --help\t', 'This help');
+
+  console.log();
+
+  console.log('\t', 'NOTE: Without path-to-project, it will check the current directory.');
+
+  console.log();
+
+  process.exit(1);
+}
+
+var toCSV = process.argv.indexOf('-C') !== -1 || process.argv.indexOf('--CSV') !== -1;
+
+var csvFields = ['Type', 'Name', 'Version', 'Licenses', 'Repository', 'Homepage'];
+
+var combinedSource = (toCSV ? Observable.just(csvFields) : Observable.empty()).concat(findLicenses(require('path').join(process.cwd(), target)));
+
+if (toCSV) {
+  combinedSource = combinedSource.map(function (row) {
+    if (!row.name) return row;
+
+    return csvFields.map(function (field) {
+      return (row[field.toLowerCase()] || '').toString();
+    });
+  }).map(function (row) {
+    return row.map(function (field) {
+      return '"' + field + '"';
+    }).join(',');
+  });
+}
+
+combinedSource.subscribe(console.log.bind(console));
