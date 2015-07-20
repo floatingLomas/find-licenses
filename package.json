@@ -1,6 +1,6 @@
 {
   "name": "find-licenses",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A little utility to find all the dependencies (including licenses) for a Node/Bower project",
   "author": "Jonathan Lomas <jonathan@floatinglomas.ca>",
   "license": "MIT",
