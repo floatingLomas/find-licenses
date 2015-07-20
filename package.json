@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "index.js",
   "bin": {
-    "find-licenses": "./find-licenses"
+    "find-licenses": "./bin/find-licenses"
   },
   "dependencies": {
     "rx": "^2.5.3",
